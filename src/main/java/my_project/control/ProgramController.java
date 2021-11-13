@@ -2,8 +2,10 @@ package my_project.control;
 
 import KAGO_framework.control.ViewController;
 import KAGO_framework.model.abitur.datenstrukturen.Queue;
-import my_project.model.Ball;
-import my_project.view.InputManager;
+import KAGO_framework.model.abitur.datenstrukturen.Stack;
+import my_project.model.QueueBall;
+import my_project.model.StackSquare;
+import my_project.view.InputReceiver;
 
 import java.awt.event.MouseEvent;
 
@@ -18,6 +20,9 @@ public class ProgramController {
 
     // Referenzen
     private ViewController viewController;  // diese Referenz soll auf ein Objekt der Klasse viewController zeigen. Über dieses Objekt wird das Fenster gesteuert.
+    private Queue<QueueBall> ballQueue;
+    private Stack<StackSquare> squareStack;
+    private QueueBall lastBallInQueue;
 
     /**
      * Konstruktor
@@ -35,9 +40,42 @@ public class ProgramController {
      * Sie erstellt die leeren Datenstrukturen, zu Beginn nur eine Queue
      */
     public void startProgram() {
-        // Erstelle ein Objekt der Klasse Ball und lasse es zeichnen
-        Ball ball1 = new Ball(150,150);
-        viewController.draw(ball1);
+        // Für Benutzerinteraktion
+        new InputReceiver(this,viewController); // darf anonym sein, weil kein Zugriff nötig ist
+        // Für die Queue:
+        ballQueue = new Queue<>();
+        squareStack = new Stack<>();
+        lastBallInQueue = null; // die letzte Kugel muss für die Animation gemerkt werden
+    }
+
+    public void addBallToQueue(){
+        QueueBall newQueueBall = new QueueBall(650,50, lastBallInQueue,viewController);
+        ballQueue.enqueue(newQueueBall);
+        lastBallInQueue = newQueueBall;
+    }
+
+    public void addSquareToStack(){
+        StackSquare newStackSquare = new StackSquare(500, -20, squareStack.top(), viewController);
+        squareStack.push(newStackSquare);
+    }
+
+    public void deleteBallFromQueue(){
+        if(!ballQueue.isEmpty()){
+            if(ballQueue.front().tryToDelete()) ballQueue.dequeue();
+        }
+    }
+
+    public void deleteSquareFromStack(){
+        if(!squareStack.isEmpty()) {
+            if(squareStack.top().tryToDelete()) squareStack.pop();
+        }
+    }
+
+    /**
+     * Aufruf bei Mausklick
+     * @param e das Objekt enthält alle Informationen zum Klick
+     */
+    public void mouseClicked(MouseEvent e){
 
     }
 
