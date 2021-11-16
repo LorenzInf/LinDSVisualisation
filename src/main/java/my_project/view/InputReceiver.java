@@ -34,21 +34,15 @@ public class InputReceiver implements Interactable {
 
     @Override
     public void keyReleased(int key) {
-        if(key == KeyEvent.VK_SPACE){
-            programController.addSquareToStack();
-        }
-        if(key == KeyEvent.VK_BACK_SPACE){
-            programController.deleteSquareFromStack();
-        }
+        if(key == KeyEvent.VK_SPACE) programController.addSquareToStack();
+        if(key == KeyEvent.VK_BACK_SPACE) programController.deleteSquareFromStack();
+        if(key == KeyEvent.VK_E) programController.changeTopSquareColor();
     }
 
     @Override
     public void mouseReleased(MouseEvent e) {
-        if(e.getButton() == MouseEvent.BUTTON1){ // falls die linke Maustaste geklickt wurde...
-            programController.addBallToQueue();
-        } else { // falls eine andere Maustaste geklickt wurde
-            programController.deleteBallFromQueue();
-        }
+        if(e.getButton() == MouseEvent.BUTTON1) programController.addBallToQueue();
+        else programController.deleteBallFromQueue();
     }
 
     @Override

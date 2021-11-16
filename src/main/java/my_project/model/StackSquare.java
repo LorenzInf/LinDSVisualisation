@@ -13,12 +13,14 @@ public class StackSquare extends GraphicalObject {
     private StackSquare topStackSquare;
     private boolean arrived;
     private boolean deleted;
+    private int r;
+    private int g;
+    private int b;
 
     /**
      * Erzeugt ein neues StackSquare
      * @param x Startposition x
      * @param y Startposition y
-     * @param previousSquare das vorhergehende StackSquare (kann auch null sein)
      * @param viewController das ViewController-Objekt des Frameworks
      */
     public StackSquare(double x, double y, StackSquare topStackSquare, ViewController viewController){
@@ -29,6 +31,9 @@ public class StackSquare extends GraphicalObject {
         viewController.draw(this);
         arrived = false;
         deleted = false;
+        r = 255;
+        g = 255;
+        b = 255;
     }
 
     /**
@@ -36,7 +41,7 @@ public class StackSquare extends GraphicalObject {
      */
     @Override
     public void draw(DrawTool drawTool){
-        drawTool.setCurrentColor(255,255,255,255);
+        drawTool.setCurrentColor(r,g,b,255);
         drawTool.drawFilledRectangle(x,y,40,40);
         drawTool.setCurrentColor(0,0,0,255);
         drawTool.drawRectangle(x,y,40,40);
@@ -67,5 +72,11 @@ public class StackSquare extends GraphicalObject {
             return true;
         }
         return false;
+    }
+
+    public void changeColor(){
+        r = (int) (Math.random()*255+1);
+        g = (int) (Math.random()*255+1);
+        b = (int) (Math.random()*255+1);
     }
 }

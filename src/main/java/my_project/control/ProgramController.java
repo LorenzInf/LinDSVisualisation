@@ -71,6 +71,10 @@ public class ProgramController {
         }
     }
 
+    public void changeTopSquareColor(){
+        if(!squareStack.isEmpty()) squareStack.top().changeColor();
+    }
+
     /**
      * Aufruf bei Mausklick
      * @param e das Objekt enthält alle Informationen zum Klick
