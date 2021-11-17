@@ -1,8 +1,10 @@
 package my_project.control;
 
 import KAGO_framework.control.ViewController;
+import KAGO_framework.model.abitur.datenstrukturen.List;
 import KAGO_framework.model.abitur.datenstrukturen.Queue;
 import KAGO_framework.model.abitur.datenstrukturen.Stack;
+import my_project.model.ListRectangle;
 import my_project.model.QueueBall;
 import my_project.model.StackSquare;
 import my_project.view.InputReceiver;
@@ -19,10 +21,18 @@ public class ProgramController {
 
 
     // Referenzen
-    private ViewController viewController;  // diese Referenz soll auf ein Objekt der Klasse viewController zeigen. Über dieses Objekt wird das Fenster gesteuert.
+    private final ViewController viewController;  // diese Referenz soll auf ein Objekt der Klasse viewController zeigen. Über dieses Objekt wird das Fenster gesteuert.
+
     private Queue<QueueBall> ballQueue;
-    private Stack<StackSquare> squareStack;
     private QueueBall lastBallInQueue;
+
+    private Stack<StackSquare> squareStack;
+
+    private List<ListRectangle> rectangleList;
+    private ListRectangle lastRectangle;
+    private int listRectangleTotal;
+    private int posInList;
+    private ListRectangle nextRectangle;
 
     /**
      * Konstruktor
@@ -46,17 +56,14 @@ public class ProgramController {
         ballQueue = new Queue<>();
         squareStack = new Stack<>();
         lastBallInQueue = null; // die letzte Kugel muss für die Animation gemerkt werden
+        rectangleList = new List<>();
     }
 
+    //Ball Queue
     public void addBallToQueue(){
         QueueBall newQueueBall = new QueueBall(650,50, lastBallInQueue,viewController);
         ballQueue.enqueue(newQueueBall);
         lastBallInQueue = newQueueBall;
-    }
-
-    public void addSquareToStack(){
-        StackSquare newStackSquare = new StackSquare(500, -20, squareStack.top(), viewController);
-        squareStack.push(newStackSquare);
     }
 
     public void deleteBallFromQueue(){
@@ -65,10 +72,39 @@ public class ProgramController {
         }
     }
 
+    //Square Stack
+    public void addSquareToStack(){
+        StackSquare newStackSquare = new StackSquare(50, -20, squareStack.top(), viewController);
+        squareStack.push(newStackSquare);
+    }
+
     public void deleteSquareFromStack(){
         if(!squareStack.isEmpty()) {
             if(squareStack.top().tryToDelete()) squareStack.pop();
         }
+    }
+
+    //Rectangle List
+    public void appendRectangleToList(){
+        ListRectangle newListRectangle = new ListRectangle(100,450,lastRectangle,viewController,this,listRectangleTotal,
+                posInList,nextRectangle);
+        rectangleList.append(newListRectangle);
+        lastRectangle = newListRectangle;
+        listRectangleTotal += 1;
+        posInList = listRectangleTotal;
+        System.out.println("appendRectangleToList() wurde aufgerufen");
+        //Please end me
+        //rectangleList.next();
+        //nextRectangle = rectangleList.getContent();
+
+    }
+
+    public void removeRectangleFromList(){
+
+    }
+
+    public boolean isCurrent(ListRectangle listRectangle){
+        return rectangleList.hasAccess() && rectangleList.getContent().equals(listRectangle);
     }
 
     public void changeTopSquareColor(){

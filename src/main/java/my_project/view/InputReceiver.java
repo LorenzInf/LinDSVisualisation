@@ -37,6 +37,8 @@ public class InputReceiver implements Interactable {
         if(key == KeyEvent.VK_SPACE) programController.addSquareToStack();
         if(key == KeyEvent.VK_BACK_SPACE) programController.deleteSquareFromStack();
         if(key == KeyEvent.VK_E) programController.changeTopSquareColor();
+
+        if(key == KeyEvent.VK_DOWN) programController.appendRectangleToList();
     }
 
     @Override

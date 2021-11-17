@@ -61,8 +61,8 @@ public class StackSquare extends GraphicalObject {
             if (y >= WINDOW_HEIGHT-80) arrived = true;
         }
         if(deleted){
-            x += 300*dt;
-            if(x > 640) viewController.removeDrawable(this);
+            x -= 300*dt;
+            if(x < -40) viewController.removeDrawable(this);
         }
     }
 
