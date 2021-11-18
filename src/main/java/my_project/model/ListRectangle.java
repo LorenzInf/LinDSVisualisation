@@ -19,7 +19,7 @@ public class ListRectangle extends GraphicalObject {
      * @param listXCoord die x-Koordinate des ersten ListRectangles
      * @param listYCoord die y-Koordinate der ListRectangles
      * @param viewController das ViewController Objekt des Frameworks
-     * @param posInList das wie vielte ListRectangle es in der Liste ist
+     * @param posInList das wie vielte ListRectangle dies in der Liste ist
      */
     public ListRectangle(double listXCoord, double listYCoord,  ViewController viewController, ProgramController programController, int posInList){
         this.listXCoord = listXCoord;
@@ -69,7 +69,11 @@ public class ListRectangle extends GraphicalObject {
         }
     }
 
-    public boolean tryToDelete(){
+    /**
+     * Versucht das ListRectangle zu löschen
+     * @return {@code true}, falls dieses ListRectangle current ist
+     */
+    public boolean deleteCurrent(){
         if(programController.isCurrent(this)){
             deleted = true;
             return true;

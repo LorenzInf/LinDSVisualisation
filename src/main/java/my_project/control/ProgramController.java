@@ -104,28 +104,32 @@ public class ProgramController {
      * Appends a ListRectangle to the rectangleList
      */
     public void appendRectangleToList(){
-        ListRectangle newListRectangle = new ListRectangle(100,450,viewController,this, posInList);
-        rectangleList.append(newListRectangle);
-        lastRectangle = newListRectangle;
-        listRectangleTotal += 1;
-        posInList = listRectangleTotal;
+        if(posInList < 32) {
+            ListRectangle newListRectangle = new ListRectangle(100, 100, viewController, this, posInList);
+            rectangleList.append(newListRectangle);
+            lastRectangle = newListRectangle;
+            listRectangleTotal += 1;
+            posInList = listRectangleTotal;
+        }
     }
 
     /**
      * Inserts a ListRectangle into rectangleList
      */
     public void insertRectangleIntoList() {
-        if(!rectangleList.isEmpty()) {
-            int tmp = posInList + 1;
-            posInList = rectangleList.getContent().getPosInList();
-            moveDownRectangleList();
-                    ListRectangle newListRectangle = new ListRectangle(100,450,viewController,this, posInList);
-            rectangleList.insert(newListRectangle);
-            lastRectangle = newListRectangle;
-            listRectangleTotal += 1;
-            posInList = tmp;
-        } else {
-            appendRectangleToList();
+        if(posInList < 32) {
+            if (!rectangleList.isEmpty()) {
+                int tmp = posInList + 1;
+                posInList = rectangleList.getContent().getPosInList();
+                toMoveUpFrom = rectangleList.getContent();
+                moveDownRectangleList();
+                ListRectangle newListRectangle = new ListRectangle(100, 100, viewController, this, posInList);
+                rectangleList.insert(newListRectangle);
+                listRectangleTotal += 1;
+                posInList = tmp;
+            } else {
+                appendRectangleToList();
+            }
         }
     }
 
@@ -134,8 +138,7 @@ public class ProgramController {
      */
     public void removeRectangleFromList(){
         if(rectangleList.hasAccess() && !removing){
-            if(rectangleList.getContent().tryToDelete()) {
-
+            if(rectangleList.getContent().deleteCurrent()) {
                 ListRectangle tmp = rectangleList.getContent();
                 rectangleList.next();
                 if(!rectangleList.hasAccess()) removedLast = true;
@@ -143,7 +146,6 @@ public class ProgramController {
                 while(rectangleList.getContent() != tmp){
                     rectangleList.next();
                 }
-
                 rectangleList.remove();
                 listRectangleTotal -= 1;
                 posInList -= 1;
@@ -162,7 +164,7 @@ public class ProgramController {
 
     /**
      * @param listRectangle the ListRectangle to be checked
-     * @return {@code true} if listRectangle is current in rectangleList
+     * @return {@code true}, if listRectangle is current in rectangleList
      */
     public boolean isCurrent(ListRectangle listRectangle){
         return rectangleList.hasAccess() && rectangleList.getContent().equals(listRectangle);
