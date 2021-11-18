@@ -38,6 +38,7 @@ public class QueueBall extends GraphicalObject {
      */
     @Override
     public void draw(DrawTool drawTool) {
+        drawTool.setCurrentColor(0,0,0,255);
         drawTool.drawCircle(x,y,20);
     }
 

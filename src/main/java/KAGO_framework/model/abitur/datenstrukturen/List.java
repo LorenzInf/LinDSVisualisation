@@ -253,7 +253,6 @@ public class List<ContentType> {
         last.setNextNode(newNode);
         last = newNode; // Letzten Knoten aktualisieren.
       }
-
     }
   }
 
@@ -343,5 +342,4 @@ public class List<ContentType> {
       return null;
     }
   }
-  
 }

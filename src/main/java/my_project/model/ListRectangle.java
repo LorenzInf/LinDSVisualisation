@@ -6,15 +6,12 @@ import KAGO_framework.view.DrawTool;
 import my_project.control.ProgramController;
 
 public class ListRectangle extends GraphicalObject {
-    private ViewController viewController;
-    private ProgramController programController;
+    private final ViewController viewController;
+    private final ProgramController programController;
     private boolean deleted;
-    private boolean visible;
-    private ListRectangle lastRectangle;
-    private double listXCoord;
-    private double listYCoord;
+    private final double listXCoord;
+    private final double listYCoord;
     private int alpha;
-    private int listRectangleTotal;
     private int posInList;
 
     /**
@@ -26,18 +23,16 @@ public class ListRectangle extends GraphicalObject {
      * @param listRectangleTotal die Gesamtanzahl aller ListRectangles
      * @param posInList das wie vielte ListRectangle es in der Liste ist
      */
-    public ListRectangle(double listXCoord, double listYCoord, ListRectangle lastRectangle, ViewController viewController, ProgramController programController,
-                         int listRectangleTotal, int posInList, ListRectangle nextRectangle){
+    public ListRectangle(double listXCoord, double listYCoord,  ViewController viewController, ProgramController programController, int posInList){
         this.listXCoord = listXCoord;
         this.listYCoord = listYCoord;
-        this.lastRectangle = lastRectangle;
         this.viewController = viewController;
         this.programController = programController;
         deleted = false;
-        visible = true;
         alpha = 1;
-        this.listRectangleTotal = listRectangleTotal;
         this.posInList = posInList;
+        y = listYCoord - 25;
+        viewController.draw(this);
     }
 
     /**
@@ -47,8 +42,7 @@ public class ListRectangle extends GraphicalObject {
     public void draw(DrawTool drawTool){
         if(programController.isCurrent(this)) drawTool.setCurrentColor(255, 215, 0, alpha); //If current, Farbe = Gold
         else drawTool.setCurrentColor(62, 180, 137, alpha); //If not current, Farbe = Minze
-        System.out.println("draw() wurde aufgerufen");
-        drawTool.drawFilledRectangle(listXCoord + posInList * 20,listYCoord - 40,13,20);
+        drawTool.drawFilledRectangle(listXCoord + posInList * 15,y,10,20);
     }
 
     /**
@@ -58,15 +52,34 @@ public class ListRectangle extends GraphicalObject {
      */
     @Override
     public void update(double dt){
-        if(!deleted && alpha < 255) alpha += 255*dt;
-        if(alpha < 1) viewController.removeDrawable(this);
+        if(!deleted && alpha < 256) alpha += 255*(dt*2);
+        alpha = Math.min(255, alpha);
         if(y < listYCoord) y += 50*dt;
+        y = Math.min(listYCoord,y);
+
+        if(deleted){
+            y -= 200*dt;
+            alpha -= 255*(dt*2);
+        }
+        if(alpha < 1) {
+            viewController.removeDrawable(this);
+            programController.moveUpRectangleList();
+        }
     }
 
     public boolean tryToDelete(){
         if(programController.isCurrent(this)){
-
+            deleted = true;
+            return true;
         }
         return false;
+    }
+
+    public void setPosInList(int posInList){
+        this.posInList = posInList;
+    }
+
+    public int getPosInList() {
+        return posInList;
     }
 }

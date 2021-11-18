@@ -31,8 +31,9 @@ public class ProgramController {
     private List<ListRectangle> rectangleList;
     private ListRectangle lastRectangle;
     private int listRectangleTotal;
-    private int posInList;
-    private ListRectangle nextRectangle;
+    private int posInList = 0;
+    private boolean removing;
+    private ListRectangle prevCurrentRectangle;
 
     /**
      * Konstruktor
@@ -86,21 +87,35 @@ public class ProgramController {
 
     //Rectangle List
     public void appendRectangleToList(){
-        ListRectangle newListRectangle = new ListRectangle(100,450,lastRectangle,viewController,this,listRectangleTotal,
-                posInList,nextRectangle);
+        ListRectangle newListRectangle = new ListRectangle(100,450,viewController,this, posInList);
         rectangleList.append(newListRectangle);
         lastRectangle = newListRectangle;
         listRectangleTotal += 1;
         posInList = listRectangleTotal;
-        System.out.println("appendRectangleToList() wurde aufgerufen");
-        //Please end me
-        //rectangleList.next();
-        //nextRectangle = rectangleList.getContent();
+    }
 
+    public void insertRectangleIntoList() {
+        if(!rectangleList.isEmpty()) {
+            int tmp = posInList + 1;
+            posInList = rectangleList.getContent().getPosInList();
+            moveDownRectangleList();
+                    ListRectangle newListRectangle = new ListRectangle(100,450,viewController,this, posInList);
+            rectangleList.insert(newListRectangle);
+            lastRectangle = newListRectangle;
+            listRectangleTotal += 1;
+            posInList = tmp;
+        }
     }
 
     public void removeRectangleFromList(){
-
+        if(rectangleList.hasAccess() && !removing){
+            if(rectangleList.getContent().tryToDelete()) {
+                rectangleList.remove();
+                listRectangleTotal -= 1;
+                posInList -= 1;
+                removing = true;
+            }
+        }
     }
 
     public boolean isCurrent(ListRectangle listRectangle){
@@ -109,6 +124,37 @@ public class ProgramController {
 
     public void changeTopSquareColor(){
         if(!squareStack.isEmpty()) squareStack.top().changeColor();
+    }
+
+    public void moveCurrentRight() {
+        if(!removing){
+            rectangleList.next();
+        }
+    }
+
+    public void moveUpRectangleList(){
+        moveRectangleList(-1);
+    }
+
+    public void moveDownRectangleList(){
+       moveRectangleList(1);
+    }
+
+    private void moveRectangleList (int amount) {
+        prevCurrentRectangle = rectangleList.getContent();
+        while(rectangleList.hasAccess()){
+            rectangleList.getContent().setPosInList(rectangleList.getContent().getPosInList() + amount);
+            rectangleList.next();
+        }
+        rectangleList.toFirst();
+        while(rectangleList.getContent() != prevCurrentRectangle){
+            rectangleList.next();
+        }
+        removing = false;
+    }
+
+    public boolean isRemoving(){
+        return removing;
     }
 
     /**
@@ -124,6 +170,9 @@ public class ProgramController {
      * @param dt Zeit seit letzter Frame
      */
     public void updateProgram(double dt){
-
+        if(!rectangleList.hasAccess()) rectangleList.toFirst();
     }
+
+
+
 }
