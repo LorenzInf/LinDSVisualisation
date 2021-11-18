@@ -39,12 +39,12 @@ public class InputReceiver implements Interactable {
         if(key == KeyEvent.VK_E) programController.changeTopSquareColor();
 
         if(!programController.isRemoving()){
-            if(key == KeyEvent.VK_DOWN) programController.appendRectangleToList();
-            if(key == KeyEvent.VK_RIGHT) programController.moveCurrentRight();
             if(key == KeyEvent.VK_UP) programController.removeRectangleFromList();
-            if(key == KeyEvent.VK_LEFT) programController.insertRectangleIntoList();
+            if(key == KeyEvent.VK_DOWN) programController.appendRectangleToList();
+            if(key == KeyEvent.VK_INSERT) programController.insertRectangleIntoList();
         }
-
+        if(key == KeyEvent.VK_RIGHT) programController.rectangleListRight();
+        if(key == KeyEvent.VK_LEFT) programController.rectangleListLeft();
     }
 
     @Override

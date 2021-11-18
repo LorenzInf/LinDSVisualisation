@@ -33,7 +33,8 @@ public class ProgramController {
     private int listRectangleTotal;
     private int posInList = 0;
     private boolean removing;
-    private ListRectangle prevCurrentRectangle;
+    private boolean removedLast;
+    private ListRectangle toMoveUpFrom;
 
     /**
      * Konstruktor
@@ -61,12 +62,19 @@ public class ProgramController {
     }
 
     //Ball Queue
+
+    /**
+     * Adds a QueueBall to ballQueue
+     */
     public void addBallToQueue(){
         QueueBall newQueueBall = new QueueBall(650,50, lastBallInQueue,viewController);
         ballQueue.enqueue(newQueueBall);
         lastBallInQueue = newQueueBall;
     }
 
+    /**
+     * Deletes a QueueBall from ballQueue
+     */
     public void deleteBallFromQueue(){
         if(!ballQueue.isEmpty()){
             if(ballQueue.front().tryToDelete()) ballQueue.dequeue();
@@ -74,11 +82,17 @@ public class ProgramController {
     }
 
     //Square Stack
+    /**
+     * Adds a StackSquare to squareStack
+     */
     public void addSquareToStack(){
         StackSquare newStackSquare = new StackSquare(50, -20, squareStack.top(), viewController);
         squareStack.push(newStackSquare);
     }
 
+    /**
+     * Deletes a StackSquare from squareStack
+     */
     public void deleteSquareFromStack(){
         if(!squareStack.isEmpty()) {
             if(squareStack.top().tryToDelete()) squareStack.pop();
@@ -86,6 +100,9 @@ public class ProgramController {
     }
 
     //Rectangle List
+    /**
+     * Appends a ListRectangle to the rectangleList
+     */
     public void appendRectangleToList(){
         ListRectangle newListRectangle = new ListRectangle(100,450,viewController,this, posInList);
         rectangleList.append(newListRectangle);
@@ -94,6 +111,9 @@ public class ProgramController {
         posInList = listRectangleTotal;
     }
 
+    /**
+     * Inserts a ListRectangle into rectangleList
+     */
     public void insertRectangleIntoList() {
         if(!rectangleList.isEmpty()) {
             int tmp = posInList + 1;
@@ -104,44 +124,99 @@ public class ProgramController {
             lastRectangle = newListRectangle;
             listRectangleTotal += 1;
             posInList = tmp;
+        } else {
+            appendRectangleToList();
         }
     }
 
+    /**
+     * Removes a ListRectangle from rectangleList
+     */
     public void removeRectangleFromList(){
         if(rectangleList.hasAccess() && !removing){
             if(rectangleList.getContent().tryToDelete()) {
+
+                ListRectangle tmp = rectangleList.getContent();
+                rectangleList.next();
+                if(!rectangleList.hasAccess()) removedLast = true;
+                rectangleList.toFirst();
+                while(rectangleList.getContent() != tmp){
+                    rectangleList.next();
+                }
+
                 rectangleList.remove();
                 listRectangleTotal -= 1;
                 posInList -= 1;
+                toMoveUpFrom = rectangleList.getContent();
                 removing = true;
             }
         }
     }
 
-    public boolean isCurrent(ListRectangle listRectangle){
-        return rectangleList.hasAccess() && rectangleList.getContent().equals(listRectangle);
-    }
-
+    /**
+     * Randomizes the colour of the top StackSquare in squareStack
+     */
     public void changeTopSquareColor(){
         if(!squareStack.isEmpty()) squareStack.top().changeColor();
     }
 
-    public void moveCurrentRight() {
-        if(!removing){
-            rectangleList.next();
+    /**
+     * @param listRectangle the ListRectangle to be checked
+     * @return {@code true} if listRectangle is current in rectangleList
+     */
+    public boolean isCurrent(ListRectangle listRectangle){
+        return rectangleList.hasAccess() && rectangleList.getContent().equals(listRectangle);
+    }
+
+    /**
+     * Moves current in rectangleList one element to the right
+     * <p> (if it gets called when current is last, current is automatically moved to first, via {@code updateProgram})
+     */
+    public void rectangleListRight() {
+        rectangleList.next();
+    }
+
+    /**
+     * Moves current in rectangleList one element to the left
+     * <p>(if it gets called when current is first, current is moved to last)
+     */
+    public void rectangleListLeft(){
+        if(!rectangleList.isEmpty()) {
+            int subtractAmount = removing ? 2 : 1;
+            int prevPos = rectangleList.getContent().getPosInList();
+            rectangleList.toFirst();
+            while(rectangleList.hasAccess() && rectangleList.getContent().getPosInList() != (prevPos - subtractAmount)) {
+                rectangleList.next();
+            }
+            if(!rectangleList.hasAccess()) rectangleList.toLast();
         }
     }
 
+    /**
+     * Is called after an element from rectangleList is removed (unless it was last)
+     */
     public void moveUpRectangleList(){
         moveRectangleList(-1);
     }
 
+    /**
+     * Is called after an element is inserted into rectangleList
+     */
     public void moveDownRectangleList(){
        moveRectangleList(1);
     }
 
+    /**
+     * If amount is -1, every ListRectangle, starting from the one after the one that got removed before this function was called, is moved up by one position
+     * <p> If amount is 1, every ListRectangle, starting from the one after the one that got inserted before this function was called, is moved down by one position
+     * @param amount amount is set by calling either {@code moveUpRectangleList} or {@code moveDownRectangleList}
+     */
     private void moveRectangleList (int amount) {
-        prevCurrentRectangle = rectangleList.getContent();
+        ListRectangle prevCurrentRectangle = rectangleList.getContent();
+        rectangleList.toFirst();
+        while(rectangleList.getContent() != toMoveUpFrom){
+            rectangleList.next();
+        }
         while(rectangleList.hasAccess()){
             rectangleList.getContent().setPosInList(rectangleList.getContent().getPosInList() + amount);
             rectangleList.next();
@@ -150,11 +225,23 @@ public class ProgramController {
         while(rectangleList.getContent() != prevCurrentRectangle){
             rectangleList.next();
         }
-        removing = false;
+        resetRemoving();
+    }
+
+    public boolean removedLast(){
+        return removedLast;
+    }
+
+    public void resetRemovedLast(){
+        removedLast = false;
     }
 
     public boolean isRemoving(){
         return removing;
+    }
+
+    public void resetRemoving(){
+        removing = false;
     }
 
     /**
@@ -172,7 +259,4 @@ public class ProgramController {
     public void updateProgram(double dt){
         if(!rectangleList.hasAccess()) rectangleList.toFirst();
     }
-
-
-
 }

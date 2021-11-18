@@ -18,9 +18,7 @@ public class ListRectangle extends GraphicalObject {
      * Erzeugt ein neues ListRectangle
      * @param listXCoord die x-Koordinate des ersten ListRectangles
      * @param listYCoord die y-Koordinate der ListRectangles
-     * @param lastRectangle das letzte ListRectangle in der Liste
      * @param viewController das ViewController Objekt des Frameworks
-     * @param listRectangleTotal die Gesamtanzahl aller ListRectangles
      * @param posInList das wie vielte ListRectangle es in der Liste ist
      */
     public ListRectangle(double listXCoord, double listYCoord,  ViewController viewController, ProgramController programController, int posInList){
@@ -63,7 +61,11 @@ public class ListRectangle extends GraphicalObject {
         }
         if(alpha < 1) {
             viewController.removeDrawable(this);
-            programController.moveUpRectangleList();
+            if(!programController.removedLast()) programController.moveUpRectangleList();
+            else {
+                programController.resetRemovedLast();
+                programController.resetRemoving();
+            }
         }
     }
 
