@@ -12,7 +12,10 @@ public class ListRectangle extends GraphicalObject {
     private final double listXCoord;
     private final double listYCoord;
     private int alpha;
-    private int posInList;
+    private double posInList;
+    private int moving;
+    private int tmp;
+
 
     /**
      * Erzeugt ein neues ListRectangle
@@ -50,7 +53,7 @@ public class ListRectangle extends GraphicalObject {
      */
     @Override
     public void update(double dt){
-        if(!deleted && alpha < 256) alpha += 255*(dt*2);
+        if (!deleted && alpha < 256) alpha += 255*(dt*2);
         alpha = Math.min(255, alpha);
         if(y < listYCoord) y += 50*dt;
         y = Math.min(listYCoord,y);
@@ -59,12 +62,27 @@ public class ListRectangle extends GraphicalObject {
             y -= 200*dt;
             alpha -= 255*(dt*2);
         }
-        if(alpha < 1) {
+        if (alpha < 1) {
             viewController.removeDrawable(this);
             if(!programController.removedLast()) programController.moveUpRectangleList();
             else {
                 programController.resetRemovedLast();
                 programController.resetRemoving();
+            }
+        }
+        if (moving == 1) {
+            if(posInList < tmp + 1){
+                posInList += 10*dt;
+                posInList = Math.min(tmp + 1, posInList);
+            } else moving = 0;
+        }
+        if (moving == -1) {
+            if(posInList > tmp - 1){
+                posInList -= 10*dt;
+                posInList = Math.max(tmp - 1, posInList);
+            } else {
+                moving = 0;
+                tmp = 0;
             }
         }
     }
@@ -81,11 +99,16 @@ public class ListRectangle extends GraphicalObject {
         return false;
     }
 
-    public void setPosInList(int posInList){
+    public void setPosInList(double posInList){
         this.posInList = posInList;
     }
 
     public int getPosInList() {
-        return posInList;
+        return (int) posInList;
+    }
+
+    public void setMoving(int amount) {
+        moving = amount;
+        tmp = (int) posInList;
     }
 }

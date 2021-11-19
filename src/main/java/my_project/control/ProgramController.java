@@ -220,7 +220,8 @@ public class ProgramController {
             rectangleList.next();
         }
         while(rectangleList.hasAccess()){
-            rectangleList.getContent().setPosInList(rectangleList.getContent().getPosInList() + amount);
+            //rectangleList.getContent().setPosInList(rectangleList.getContent().getPosInList() + amount);
+            rectangleList.getContent().setMoving(amount);
             rectangleList.next();
         }
         rectangleList.toFirst();
