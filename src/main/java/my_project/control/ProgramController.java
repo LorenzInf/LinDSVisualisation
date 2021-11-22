@@ -29,8 +29,6 @@ public class ProgramController {
     private Stack<StackSquare> squareStack;
 
     private List<ListRectangle> rectangleList;
-    private ListRectangle lastRectangle;
-    private int listRectangleTotal;
     private int posInList = 0;
     private boolean removing;
     private boolean removedLast;
@@ -107,9 +105,7 @@ public class ProgramController {
         if(posInList < 32) {
             ListRectangle newListRectangle = new ListRectangle(100, 100, viewController, this, posInList);
             rectangleList.append(newListRectangle);
-            lastRectangle = newListRectangle;
-            listRectangleTotal += 1;
-            posInList = listRectangleTotal;
+            posInList += 1;
         }
     }
 
@@ -125,7 +121,6 @@ public class ProgramController {
                 moveDownRectangleList();
                 ListRectangle newListRectangle = new ListRectangle(100, 100, viewController, this, posInList);
                 rectangleList.insert(newListRectangle);
-                listRectangleTotal += 1;
                 posInList = tmp;
             } else {
                 appendRectangleToList();
@@ -147,7 +142,6 @@ public class ProgramController {
                     rectangleList.next();
                 }
                 rectangleList.remove();
-                listRectangleTotal -= 1;
                 posInList -= 1;
                 toMoveUpFrom = rectangleList.getContent();
                 removing = true;
@@ -220,7 +214,6 @@ public class ProgramController {
             rectangleList.next();
         }
         while(rectangleList.hasAccess()){
-            //rectangleList.getContent().setPosInList(rectangleList.getContent().getPosInList() + amount);
             rectangleList.getContent().setMoving(amount);
             rectangleList.next();
         }

@@ -1,6 +1,5 @@
 package my_project.model;
 
-import KAGO_framework.control.SoundController;
 import KAGO_framework.control.ViewController;
 import KAGO_framework.model.GraphicalObject;
 import KAGO_framework.view.DrawTool;
@@ -9,8 +8,8 @@ import static my_project.Config.WINDOW_HEIGHT;
 
 public class StackSquare extends GraphicalObject {
 
-    private ViewController viewController;
-    private StackSquare topStackSquare;
+    private final ViewController viewController;
+    private final StackSquare topStackSquare;
     private boolean arrived;
     private boolean deleted;
     private int r;

@@ -99,10 +99,6 @@ public class ListRectangle extends GraphicalObject {
         return false;
     }
 
-    public void setPosInList(double posInList){
-        this.posInList = posInList;
-    }
-
     public int getPosInList() {
         return (int) posInList;
     }

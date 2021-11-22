@@ -10,8 +10,8 @@ import KAGO_framework.view.DrawTool;
  */
 public class QueueBall extends GraphicalObject {
 
-    private ViewController viewController;
-    private QueueBall previousQueueBall; // Vorgänger des QueueBalls
+    private final ViewController viewController;
+    private final QueueBall previousQueueBall; // Vorgänger des QueueBalls
     private boolean arrived; // hat der QueueBall den Anfang der Schlange erreicht?
     private boolean deleted; // wurde der QueueBall aus der Schlange gelöscht?
 
