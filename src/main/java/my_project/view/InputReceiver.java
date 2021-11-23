@@ -45,6 +45,11 @@ public class InputReceiver implements Interactable {
         }
         if(key == KeyEvent.VK_RIGHT) programController.rectangleListRight();
         if(key == KeyEvent.VK_LEFT) programController.rectangleListLeft();
+
+        if(key == KeyEvent.VK_W) programController.squareArrayUp();
+        if(key == KeyEvent.VK_A) programController.squareArrayLeft();
+        if(key == KeyEvent.VK_S) programController.squareArrayDown();
+        if(key == KeyEvent.VK_D) programController.squareArrayRight();
     }
 
     @Override

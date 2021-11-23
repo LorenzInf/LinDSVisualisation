@@ -4,12 +4,14 @@ import KAGO_framework.control.ViewController;
 import KAGO_framework.model.abitur.datenstrukturen.List;
 import KAGO_framework.model.abitur.datenstrukturen.Queue;
 import KAGO_framework.model.abitur.datenstrukturen.Stack;
+import my_project.model.ArraySquare;
 import my_project.model.ListRectangle;
 import my_project.model.QueueBall;
 import my_project.model.StackSquare;
 import my_project.view.InputReceiver;
 
 import java.awt.event.MouseEvent;
+import java.lang.reflect.Array;
 
 /**
  * Ein Objekt der Klasse ProgramController dient dazu das Programm zu steuern. Die updateProgram - Methode wird
@@ -34,6 +36,8 @@ public class ProgramController {
     private boolean removedLast;
     private ListRectangle toMoveUpFrom;
 
+    private ArraySquare squareArray[][] = new ArraySquare[8][4];
+
     /**
      * Konstruktor
      * Dieser legt das Objekt der Klasse ProgramController an, das den Programmfluss steuert.
@@ -56,7 +60,16 @@ public class ProgramController {
         ballQueue = new Queue<>();
         squareStack = new Stack<>();
         lastBallInQueue = null; // die letzte Kugel muss für die Animation gemerkt werden
+
+        // Für die List
         rectangleList = new List<>();
+
+        // Für das Array
+        for(int x = 0; x < squareArray.length; x++){
+            for(int y = 0; y < squareArray.length; y++){
+                ArraySquare arraySquare = new ArraySquare(x,y,viewController,this,true);
+            }
+        }
     }
 
     //Ball Queue
@@ -238,6 +251,22 @@ public class ProgramController {
 
     public void resetRemoving(){
         removing = false;
+    }
+
+    public void squareArrayUp() {
+
+    }
+
+    public void squareArrayLeft() {
+
+    }
+
+    public void squareArrayDown() {
+
+    }
+
+    public void squareArrayRight() {
+
     }
 
     /**
