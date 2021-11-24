@@ -13,12 +13,13 @@ public class ArraySquare extends GraphicalObject {
     private boolean empty;
     private boolean current;
 
-    public ArraySquare(int arrayX, int arrayY, ViewController viewController, ProgramController programController, boolean empty){
+    public ArraySquare(int arrayX, int arrayY, ViewController viewController, ProgramController programController, boolean empty, boolean current){
         this.arrayX = arrayX;
         this.arrayY = arrayY;
         this.programController = programController;
-        this.empty = true;
-        current = false;
+        this.viewController = viewController;
+        this.empty = empty;
+        this.current = current;
         viewController.draw(this);
     }
 
@@ -27,12 +28,18 @@ public class ArraySquare extends GraphicalObject {
      */
     @Override
     public void draw(DrawTool drawTool){
-        if(current) drawTool.setCurrentColor(50, 200, 50, 255);
-        else if(empty) drawTool.setCurrentColor(100, 100, 100, 150);
-        else drawTool.setCurrentColor(255, 50, 50, 255);
+        if(current) drawTool.setCurrentColor(100, 200, 100, 255);
+        else if(empty) drawTool.setCurrentColor(150, 150, 150, 150);
+        else drawTool.setCurrentColor(255, 100, 100, 255);
 
         if(arrayX == 0) drawTool.drawFilledRectangle(150, (arrayY * 30) + 200, 25, 25);
         else drawTool.drawFilledRectangle((arrayX * 20) + 160, (arrayY * 30) + 207.5, 15, 15);
+    }
+
+    public void deleteCurrent(){
+        if(current){
+            viewController.removeDrawable(this);
+        }
     }
 
     /**

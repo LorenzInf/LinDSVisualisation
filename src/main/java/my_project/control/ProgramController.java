@@ -37,6 +37,7 @@ public class ProgramController {
     private ListRectangle toMoveUpFrom;
 
     private ArraySquare squareArray[][] = new ArraySquare[8][4];
+    private ArraySquare currentArray[][] = new ArraySquare[8][4];
 
     /**
      * Konstruktor
@@ -65,11 +66,12 @@ public class ProgramController {
         rectangleList = new List<>();
 
         // Für das Array
-        for(int x = 0; x < squareArray.length; x++){
-            for(int y = 0; y < squareArray.length; y++){
-                ArraySquare arraySquare = new ArraySquare(x,y,viewController,this,true);
+        for(int x = 0; x < 4; x++){
+            for(int y = 0; y < 8; y++){
+                ArraySquare arraySquare = new ArraySquare(x,y,viewController,this,true,false);
             }
         }
+        currentArray[0][0] = new ArraySquare(0,0,viewController,this,true,true);
     }
 
     //Ball Queue
@@ -253,20 +255,33 @@ public class ProgramController {
         removing = false;
     }
 
-    public void squareArrayUp() {
+    public void squareArrayMove(int amountX, int amountY){
+        for(int x = 0; x < currentArray.length; x++){
+            for(int y = 0; y < currentArray.length; y++){
+                if (currentArray[x][y] != null){
+                    currentArray[x][y].deleteCurrent();
+                    currentArray[x][y] = null;
+                    currentArray[x + amountX][y + amountY] = new ArraySquare(0,0,viewController,this,true,true);
+                    return;
+                }
+            }
+        }
+    }
 
+    public void squareArrayUp() {
+        squareArrayMove(0,-1);
     }
 
     public void squareArrayLeft() {
-
+        squareArrayMove(-1,0);
     }
 
     public void squareArrayDown() {
-
+        squareArrayMove(0,1);
     }
 
     public void squareArrayRight() {
-
+        squareArrayMove(1,0);
     }
 
     /**
